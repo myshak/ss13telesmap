@@ -304,7 +304,13 @@
     <addaction name="actionCalibrate"/>
     <addaction name="actionExit"/>
    </widget>
+   <widget class="QMenu" name="menuMaps">
+    <property name="title">
+     <string>Maps</string>
+    </property>
+   </widget>
    <addaction name="menuSS13_Telescience_Coordinator"/>
+   <addaction name="menuMaps"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionCalibrate">
