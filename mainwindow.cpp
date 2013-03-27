@@ -128,6 +128,7 @@ void MapScene::setMap(Map *m)
     QPixmap map_pix(currentMap->path);
     map = this->addPixmap(map_pix);
     map->setZValue(0);
+    setSceneRect(0,0,map_pix.width(), map_pix.height());
     selectedSquare->hide();
     highlightedSquare->hide();
 }
@@ -144,8 +145,12 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     emit mousepressed(&ne);
 
     if(event->button() == Qt::RightButton) {
-        int x = (event->scenePos().x())/32;
-        int y = (event->scenePos().y() + 16 + currentMap->mapPixelOffsetTopY)/32;
+//        int x = (event->scenePos().x())/32;
+//        int y = (event->scenePos().y() + 16 + currentMap->mapPixelOffsetTopY)/32;
+//        int y = (event->scenePos().y() + 32 + currentMap->mapPixelOffsetTopY)/32;
+
+        int x = (event->scenePos().x() - currentMap->mapPixelOffsetLeftX)/32;
+        int y = (event->scenePos().y() + 32 - currentMap->mapPixelOffsetTopY)/32;
 
         selectedSquare->setX(x*32);
         selectedSquare->setY(y*32 - (32 - currentMap->mapPixelOffsetTopY) - 1);
@@ -161,8 +166,8 @@ void MapScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     QMouseEvent ne(event->type(), pf.toPoint(), event->button(), event->buttons(), event->modifiers());
     emit mousemoved(&ne);
 
-    int x = (event->scenePos().x())/32;
-    int y = (event->scenePos().y() + 16 + currentMap->mapPixelOffsetTopY)/32;
+    int x = (event->scenePos().x() - currentMap->mapPixelOffsetLeftX)/32;
+    int y = (event->scenePos().y() + 32 - currentMap->mapPixelOffsetTopY)/32;
 
     highlightedSquare->setX(x*32 );
     highlightedSquare->setY(y*32 - (32 - currentMap->mapPixelOffsetTopY) - 1);
