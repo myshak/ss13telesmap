@@ -61,14 +61,34 @@ public slots:
     void calibrated(qreal mx, qreal my, qreal cx, qreal cy);
     void map_selected(QAction *a);
     void recalculate_manual();
+    void update_params();
     
 private slots:
     void on_actionCalibrate_triggered();
+    void toolbutton_pressed(int id);
+
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_tableWidget_itemSelectionChanged();
+
+    void on_pushButton_4_clicked();
 
 private:
     Ui::MainWindow *ui;
     MapScene *scene;
     Map *currentMap;
+    QButtonGroup* bg;
+    qreal mx;
+    qreal my;
+    qreal cx;
+    qreal cy;
+    bool selected;
+    int sx;
+    int sy;
 
     QVector<Map> maps;
 };

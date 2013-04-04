@@ -14,7 +14,14 @@ const int mapPixelOffsetBottomY = 32 - 17; // From bottom edge*/
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    scene(new MapScene(this))
+    scene(new MapScene(this)),
+    mx(0),
+    my(0),
+    cx(0),
+    cy(0),
+    selected(false),
+    sx(0),
+    sy(0)
 {
     ui->setupUi(this);
 
@@ -54,6 +61,40 @@ MainWindow::MainWindow(QWidget *parent) :
     QApplication::setOverrideCursor( Qt::ArrowCursor );
     ui->graphicsView->show();
 
+    ui->stackedWidget->hide();
+    ui->tableWidget->setHorizontalHeaderLabels({"Name", "Map", "X", "Y"});
+    ui->tableWidget->horizontalHeader()->setDefaultAlignment(Qt::AlignHCenter);
+    ui->tableWidget->horizontalHeaderItem(0)->setTextAlignment(Qt::AlignLeft);
+    ui->tableWidget->horizontalHeader()->setResizeMode(0, QHeaderView::Stretch);
+    ui->tableWidget->horizontalHeader()->setResizeMode(1, QHeaderView::ResizeToContents);
+    ui->tableWidget->horizontalHeader()->setResizeMode(2, QHeaderView::Fixed);
+    ui->tableWidget->horizontalHeader()->setResizeMode(3, QHeaderView::Fixed);
+
+    ui->tableWidget->horizontalHeader()->resizeSection(2, 50);
+    ui->tableWidget->horizontalHeader()->resizeSection(3, 50);
+
+    QSettings bookmark_settings("bookmarks.ini", QSettings::IniFormat);
+
+    int bookmark_size = bookmark_settings.beginReadArray("bookmark");
+    for(int i=0; i < bookmark_size; i++) {
+        bookmark_settings.setArrayIndex(i);
+        int row = ui->tableWidget->rowCount();
+        ui->tableWidget->insertRow(row);
+        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(bookmark_settings.value("name").toString()));
+        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(bookmark_settings.value("map").toString()));
+        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(bookmark_settings.value("x").toString()));
+        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(bookmark_settings.value("y").toString()));
+    }
+    bookmark_settings.endArray();
+
+    bg = new QButtonGroup(this);
+    bg->setExclusive(true);
+    bg->addButton(ui->button_favourites);
+    bg->setId(ui->button_favourites, 0);
+    bg->addButton(ui->button_usage);
+    bg->setId(ui->button_usage, 1);
+    QObject::connect(bg, SIGNAL(buttonClicked(int)), this, SLOT(toolbutton_pressed(int)));
+
     QObject::connect(ui->menuMaps, SIGNAL(triggered(QAction*)), this, SLOT(map_selected(QAction*)));
     QObject::connect(scene, SIGNAL(mousepressed(QMouseEvent*)), this, SLOT(pressed(QMouseEvent*)));
     QObject::connect(scene, SIGNAL(mousemoved(QMouseEvent*)), this, SLOT(moved(QMouseEvent*)));
@@ -69,19 +110,17 @@ void MainWindow::pressed(QMouseEvent *e)
 {
     if(e->button() != Qt::RightButton) return;
 
+    selected = true;
+    sx = e->x()/32 + currentMap->mapTileOffsetX;
+    sy = e->y()/32 + currentMap->mapTileOffsetY;
+
+    ui->label_ox->setText(QString("%1").arg(sx));
+    ui->label_oy->setText(QString("%1").arg(sy));
+
     if(ui->edit_mx->value() != 0 &&
        ui->edit_my->value() != 0) {
-        int x = e->x()/32 + currentMap->mapTileOffsetX;
-        int y = e->y()/32 + currentMap->mapTileOffsetY;
-        qreal mx,my,cx,cy;
-        mx = ui->edit_mx->value();
-        my = ui->edit_my->value();
-        cx = ui->edit_cx->value();
-        cy = ui->edit_cy->value();
-        float tx = (static_cast<float>(x)-cx) / mx;
-        float ty = (static_cast<float>(y)-cy) / my;
-        ui->label_ox->setText(QString("%1").arg(x));
-        ui->label_oy->setText(QString("%1").arg(y));
+        float tx = (static_cast<float>(sx)-cx) / mx;
+        float ty = (static_cast<float>(sy)-cy) / my;
         ui->label_tx->setText(QString("%1").arg(tx));
         ui->label_ty->setText(QString("%1").arg(ty));
     }
@@ -174,8 +213,6 @@ void MapScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     highlightedSquare->setY(y*32 - (32 - currentMap->mapPixelOffsetTopY) - 1);
     highlightedSquare->show();
 
-
-
     QGraphicsScene::mouseMoveEvent(event);
 }
 
@@ -186,6 +223,20 @@ void MainWindow::on_actionCalibrate_triggered()
     d.exec();
 }
 
+void MainWindow::toolbutton_pressed(int id)
+{
+
+    if(ui->stackedWidget->isVisible() && ui->stackedWidget->currentIndex() == id) {
+        ui->stackedWidget->hide();
+        bg->setExclusive(false);
+        bg->checkedButton()->setChecked(false);
+        bg->setExclusive(true);
+    } else {
+        ui->stackedWidget->setCurrentIndex(id);
+        ui->stackedWidget->show();
+    }
+}
+
 
 void MainWindow::calibrated(qreal mx, qreal my, qreal cx, qreal cy)
 {
@@ -193,6 +244,7 @@ void MainWindow::calibrated(qreal mx, qreal my, qreal cx, qreal cy)
     ui->edit_my->setValue(my);
     ui->edit_cx->setValue(cx);
     ui->edit_cy->setValue(cy);
+    update_params();
 }
 
 void MainWindow::map_selected(QAction *a)
@@ -215,16 +267,19 @@ void MainWindow::recalculate_manual()
        ui->edit_my->value() != 0) {
         qreal mox = ui->edit_mox->value();
         qreal moy = ui->edit_moy->value();
-        qreal mx,my,cx,cy;
-        mx = ui->edit_mx->value();
-        my = ui->edit_my->value();
-        cx = ui->edit_cx->value();
-        cy = ui->edit_cy->value();
         float tx = (mox-cx) / mx;
         float ty = (moy-cy) / my;
         ui->label_mtx->setText(QString("%1").arg(tx));
         ui->label_mty->setText(QString("%1").arg(ty));
     }
+}
+
+void MainWindow::update_params()
+{
+    mx = ui->edit_mx->value();
+    my = ui->edit_my->value();
+    cx = ui->edit_cx->value();
+    cy = ui->edit_cy->value();
 }
 
 
@@ -238,3 +293,67 @@ Map::Map(QString path, QPoint offsetTopLeft, QPoint offsetBottomRight, QPoint ti
 {
 }
 
+void MainWindow::on_pushButton_clicked()
+{
+    ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    ui->tableWidget->removeRow(ui->tableWidget->currentRow());
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    QSettings bookmark_settings("bookmarks.ini", QSettings::IniFormat);
+    bookmark_settings.clear();
+
+    bookmark_settings.beginWriteArray("bookmark");
+    for(int i=0; i < ui->tableWidget->rowCount(); i++) {
+        bookmark_settings.setArrayIndex(i);
+        bookmark_settings.setValue("name", ui->tableWidget->item(i, 0)->text());
+        bookmark_settings.setValue("map", ui->tableWidget->item(i, 1)->text());
+        bookmark_settings.setValue("x", ui->tableWidget->item(i, 2)->text());
+        bookmark_settings.setValue("y", ui->tableWidget->item(i, 3)->text());
+    }
+    bookmark_settings.endArray();
+
+}
+
+void MainWindow::on_tableWidget_itemSelectionChanged()
+{
+    int row = ui->tableWidget->currentRow();
+    if(row == -1) return;
+
+    int bx = ui->tableWidget->item(row, 2)->text().toInt();
+    int by = ui->tableWidget->item(row, 3)->text().toInt();
+
+    //ui->edit_mox->setValue(bx);
+    //ui->edit_moy->setValue(by);
+
+    if(mx != 0 &&
+       my != 0) {
+        float tx = (bx-cx) / mx;
+        float ty = (by-cy) / my;
+
+        ui->label_bname->setText(ui->tableWidget->item(row, 0)->text());
+        ui->label_bmap->setText(ui->tableWidget->item(row, 1)->text());
+        ui->label_box->setText(QString("%1").arg(bx));
+        ui->label_boy->setText(QString("%1").arg(by));
+        ui->label_btx->setText(QString("%1").arg(tx));
+        ui->label_bty->setText(QString("%1").arg(ty));
+    }
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    if(selected) {
+        int row = ui->tableWidget->rowCount();
+        ui->tableWidget->insertRow(row);
+
+        ui->tableWidget->setItem(row, 0, new QTableWidgetItem("Bookmark"));
+        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(currentMap->name));
+        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(QString("%1").arg(sx)));
+        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(QString("%1").arg(sy)));
+    }
+}
