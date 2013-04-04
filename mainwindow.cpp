@@ -123,6 +123,7 @@ void MapScene::setMap(Map *m)
     currentMap = m;
     if(map) {
         this->removeItem(map);
+        delete map;
     }
 
     QPixmap map_pix(currentMap->path);
@@ -206,6 +207,24 @@ void MainWindow::map_selected(QAction *a)
 
     a->setChecked(true);
     setWindowTitle(QString("%1 - %2").arg(QCoreApplication::applicationName()).arg(maps[a->data().toInt()].name));
+}
+
+void MainWindow::recalculate_manual()
+{
+    if(ui->edit_mx->value() != 0 &&
+       ui->edit_my->value() != 0) {
+        qreal mox = ui->edit_mox->value();
+        qreal moy = ui->edit_moy->value();
+        qreal mx,my,cx,cy;
+        mx = ui->edit_mx->value();
+        my = ui->edit_my->value();
+        cx = ui->edit_cx->value();
+        cy = ui->edit_cy->value();
+        float tx = (mox-cx) / mx;
+        float ty = (moy-cy) / my;
+        ui->label_mtx->setText(QString("%1").arg(tx));
+        ui->label_mty->setText(QString("%1").arg(ty));
+    }
 }
 
 

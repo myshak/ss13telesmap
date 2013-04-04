@@ -60,6 +60,7 @@ public slots:
     void moved(QMouseEvent * e);
     void calibrated(qreal mx, qreal my, qreal cx, qreal cy);
     void map_selected(QAction *a);
+    void recalculate_manual();
     
 private slots:
     void on_actionCalibrate_triggered();
