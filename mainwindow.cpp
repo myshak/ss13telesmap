@@ -122,10 +122,15 @@ void MainWindow::pressed(QMouseEvent *e)
         ui->label_ox->setText(QString("%1").arg(sx));
         ui->label_oy->setText(QString("%1").arg(sy));
 
-        if(ui->edit_mx->value() != 0 &&
-                ui->edit_my->value() != 0) {
-            float tx = (static_cast<float>(sx)-cx) / mx;
-            float ty = (static_cast<float>(sy)-cy) / my;
+
+        bool e_mx_ok = false;
+        bool e_my_ok = false;
+        ui->edit_mx->currentText().toInt(&e_mx_ok);
+        ui->edit_my->currentText().toInt(&e_my_ok);
+
+        if(e_mx_ok && e_my_ok) {
+            float tx = (static_cast<float>(sx)+cx) / mx;
+            float ty = (static_cast<float>(sy)+cy) / my;
             ui->label_tx->setText(QString("%1").arg(tx));
             ui->label_ty->setText(QString("%1").arg(ty));
         }
@@ -256,8 +261,18 @@ void MainWindow::toolbutton_pressed(int id)
 
 void MainWindow::calibrated(qreal mx, qreal my, qreal cx, qreal cy)
 {
-    ui->edit_mx->setValue(mx);
-    ui->edit_my->setValue(my);
+    if(mx == 1 || mx == 2) {
+        ui->edit_mx->setCurrentIndex(mx);
+    } else if (mx == 4) {
+        ui->edit_mx->setCurrentIndex(3);
+    }
+
+    if(my == 1 || my == 2) {
+        ui->edit_my->setCurrentIndex(my);
+    } else if (mx == 4) {
+        ui->edit_my->setCurrentIndex(3);
+    }
+
     ui->edit_cx->setValue(cx);
     ui->edit_cy->setValue(cy);
     update_params();
@@ -279,8 +294,12 @@ void MainWindow::map_selected(QAction *a)
 
 void MainWindow::recalculate_manual()
 {
-    if(ui->edit_mx->value() != 0 &&
-       ui->edit_my->value() != 0) {
+    bool e_mx_ok = false;
+    bool e_my_ok = false;
+    ui->edit_mx->currentText().toInt(&e_mx_ok);
+    ui->edit_my->currentText().toInt(&e_my_ok);
+
+    if(e_mx_ok && e_my_ok) {
         qreal mox = ui->edit_mox->value();
         qreal moy = ui->edit_moy->value();
         float tx = (mox+cx) / mx;
@@ -292,10 +311,18 @@ void MainWindow::recalculate_manual()
 
 void MainWindow::update_params()
 {
-    mx = ui->edit_mx->value();
-    my = ui->edit_my->value();
+    // We check correctness when converting, so 0 here is acceptable
+    mx = ui->edit_mx->currentText().toInt();
+    my = ui->edit_my->currentText().toInt();
+
     cx = ui->edit_cx->value();
     cy = ui->edit_cy->value();
+
+    recalculate_manual();
+    on_tableWidget_itemSelectionChanged();
+
+    ui->label_tx->clear();
+    ui->label_ty->clear();
 }
 
 
