@@ -9,6 +9,7 @@ public:
     MapView(QWidget *parent = NULL);
 
     void calculateZoom();
+    void resetZoom();
 
 protected:
     virtual void wheelEvent(QWheelEvent* event);

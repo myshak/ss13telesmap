@@ -109,23 +109,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::pressed(QMouseEvent *e)
 {
-    if(e->button() != Qt::RightButton) return;
+    if(e->button() == Qt::MiddleButton) {
+        ui->graphicsView->resetZoom();
+    } else if(e->button() == Qt::RightButton) {
 
-    selected = true;
-    sx = 1+ e->x()/32 + currentMap->mapTileOffsetX;
-    sy = 1+ e->y()/32 + currentMap->mapTileOffsetY;
+        if(e->button() != Qt::RightButton) return;
 
-    ui->label_ox->setText(QString("%1").arg(sx));
-    ui->label_oy->setText(QString("%1").arg(sy));
+        selected = true;
+        sx = 1+ e->x()/32 + currentMap->mapTileOffsetX;
+        sy = 1+ e->y()/32 + currentMap->mapTileOffsetY;
 
-    if(ui->edit_mx->value() != 0 &&
-       ui->edit_my->value() != 0) {
-        float tx = (static_cast<float>(sx)-cx) / mx;
-        float ty = (static_cast<float>(sy)-cy) / my;
-        ui->label_tx->setText(QString("%1").arg(tx));
-        ui->label_ty->setText(QString("%1").arg(ty));
+        ui->label_ox->setText(QString("%1").arg(sx));
+        ui->label_oy->setText(QString("%1").arg(sy));
+
+        if(ui->edit_mx->value() != 0 &&
+                ui->edit_my->value() != 0) {
+            float tx = (static_cast<float>(sx)-cx) / mx;
+            float ty = (static_cast<float>(sy)-cy) / my;
+            ui->label_tx->setText(QString("%1").arg(tx));
+            ui->label_ty->setText(QString("%1").arg(ty));
+        }
+        e->accept();
     }
-    e->accept();
 }
 
 void MainWindow::moved(QMouseEvent *e)
