@@ -46,6 +46,11 @@ void MapView::resizeEvent(QResizeEvent *event)
     QGraphicsView::resizeEvent(event);
 
     calculateZoom();
+
+    if(m_currentZoom < m_minZoom) {
+        m_currentZoom = m_minZoom;
+    }
+
     resetMatrix();
     scale(m_currentZoom, m_currentZoom);
 }
