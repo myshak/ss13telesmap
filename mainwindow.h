@@ -32,6 +32,7 @@ public:
     MapScene(QObject * parent = 0);
     void setMap(Map *m);
     Map *getMap() const;
+    void highligt(QPoint pos);
 
 signals:
      void mousepressed(QMouseEvent*);
@@ -40,6 +41,7 @@ signals:
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent * event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+
 private:
     QGraphicsRectItem *selectedSquare;
     QGraphicsRectItem *highlightedSquare;

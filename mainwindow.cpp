@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     ui->graphicsView->setScene(scene);
+    ui->graphicsView->calculateZoom();
     QApplication::setOverrideCursor( Qt::ArrowCursor );
     ui->graphicsView->show();
 
@@ -111,8 +112,8 @@ void MainWindow::pressed(QMouseEvent *e)
     if(e->button() != Qt::RightButton) return;
 
     selected = true;
-    sx = e->x()/32 + currentMap->mapTileOffsetX;
-    sy = e->y()/32 + currentMap->mapTileOffsetY;
+    sx = 1+ e->x()/32 + currentMap->mapTileOffsetX;
+    sy = 1+ e->y()/32 + currentMap->mapTileOffsetY;
 
     ui->label_ox->setText(QString("%1").arg(sx));
     ui->label_oy->setText(QString("%1").arg(sy));
@@ -129,8 +130,12 @@ void MainWindow::pressed(QMouseEvent *e)
 
 void MainWindow::moved(QMouseEvent *e)
 {
-    int x = e->x()/32 + currentMap->mapTileOffsetX;
-    int y = e->y()/32 + currentMap->mapTileOffsetY;
+//    int x = e->x()/32 + currentMap->mapTileOffsetX;
+//    int y = e->y()/32 + currentMap->mapTileOffsetY;
+    int ex = e->x() + currentMap->mapPixelOffsetLeftX;
+    int ey = e->y() ;//+ currentMap->mapPixelOffsetTopY;
+    int x = 1+ex/32 + currentMap->mapTileOffsetX;
+    int y = 1+ey/32 + currentMap->mapTileOffsetY;
 
     ui->statusBar->showMessage(QString("X: %1 / Y: %2").arg(x).arg(y));
 
@@ -178,6 +183,12 @@ Map *MapScene::getMap() const
     return currentMap;
 }
 
+void MapScene::highligt(QPoint pos)
+{
+    highlightedSquare->setPos(pos);
+    highlightedSquare->show();
+}
+
 void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF pf(event->scenePos().x() - currentMap->mapPixelOffsetLeftX, height() - event->scenePos().y() - currentMap->mapPixelOffsetBottomY);
@@ -192,7 +203,7 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         int x = (event->scenePos().x() - currentMap->mapPixelOffsetLeftX)/32;
         int y = (event->scenePos().y() + 32 - currentMap->mapPixelOffsetTopY)/32;
 
-        selectedSquare->setX(x*32);
+        selectedSquare->setX(x*32 + currentMap->mapPixelOffsetLeftX);
         selectedSquare->setY(y*32 - (32 - currentMap->mapPixelOffsetTopY) - 1);
         selectedSquare->show();
     }
@@ -208,10 +219,10 @@ void MapScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     int x = (event->scenePos().x() - currentMap->mapPixelOffsetLeftX)/32;
     int y = (event->scenePos().y() + 32 - currentMap->mapPixelOffsetTopY)/32;
+    int x_pos = x*32 + currentMap->mapPixelOffsetLeftX;
+    int y_pos = y*32 - (32 - currentMap->mapPixelOffsetTopY) - 1;
 
-    highlightedSquare->setX(x*32 );
-    highlightedSquare->setY(y*32 - (32 - currentMap->mapPixelOffsetTopY) - 1);
-    highlightedSquare->show();
+    highligt(QPoint{x_pos, y_pos});
 
     QGraphicsScene::mouseMoveEvent(event);
 }
@@ -267,8 +278,8 @@ void MainWindow::recalculate_manual()
        ui->edit_my->value() != 0) {
         qreal mox = ui->edit_mox->value();
         qreal moy = ui->edit_moy->value();
-        float tx = (mox-cx) / mx;
-        float ty = (moy-cy) / my;
+        float tx = (mox+cx) / mx;
+        float ty = (moy+cy) / my;
         ui->label_mtx->setText(QString("%1").arg(tx));
         ui->label_mty->setText(QString("%1").arg(ty));
     }
@@ -325,16 +336,24 @@ void MainWindow::on_tableWidget_itemSelectionChanged()
     int row = ui->tableWidget->currentRow();
     if(row == -1) return;
 
+    if (!ui->tableWidget->item(row, 2) ||
+        !ui->tableWidget->item(row, 3)) return;
+
     int bx = ui->tableWidget->item(row, 2)->text().toInt();
     int by = ui->tableWidget->item(row, 3)->text().toInt();
 
-    //ui->edit_mox->setValue(bx);
-    //ui->edit_moy->setValue(by);
+    if(currentMap->name == ui->tableWidget->item(row,1)->text()) {
+        int x_pos = bx*32;
+        int y_pos = scene->height() - by*32;
+        ui->graphicsView->centerOn(x_pos+16, y_pos+16);
+
+        scene->highligt(QPoint{x_pos -32, y_pos});
+    }
 
     if(mx != 0 &&
        my != 0) {
-        float tx = (bx-cx) / mx;
-        float ty = (by-cy) / my;
+        float tx = (bx+cx) / mx;
+        float ty = (by+cy) / my;
 
         ui->label_bname->setText(ui->tableWidget->item(row, 0)->text());
         ui->label_bmap->setText(ui->tableWidget->item(row, 1)->text());
@@ -357,3 +376,6 @@ void MainWindow::on_pushButton_4_clicked()
         ui->tableWidget->setItem(row, 3, new QTableWidgetItem(QString("%1").arg(sy)));
     }
 }
+
+
+
