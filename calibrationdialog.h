@@ -21,8 +21,13 @@ signals:
 protected :
     void accept();
 
+public slots:
+    void update_max_values();
+
 private:
     Ui::CalibrationDialog *ui;
+    void calibrate_extrapolation();
+    void calibrate_gps();
 };
 
 #endif // CALIBRATIONDIALOG_H

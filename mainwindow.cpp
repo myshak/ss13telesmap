@@ -311,15 +311,23 @@ void MainWindow::recalculate_manual()
 
 void MainWindow::update_params()
 {
-    // We check correctness when converting, so 0 here is acceptable
-    mx = ui->edit_mx->currentText().toInt();
-    my = ui->edit_my->currentText().toInt();
-
     cx = ui->edit_cx->value();
     cy = ui->edit_cy->value();
 
-    recalculate_manual();
-    on_tableWidget_itemSelectionChanged();
+    bool m_ok = false;
+    mx = ui->edit_mx->currentText().toInt(&m_ok);
+    my = ui->edit_my->currentText().toInt(&m_ok);
+
+    // Recalculate only with valid constants
+    if(m_ok) {
+        recalculate_manual();
+        on_tableWidget_itemSelectionChanged();
+    } else {
+        ui->label_mtx->clear();
+        ui->label_mty->clear();
+        ui->label_btx->clear();
+        ui->label_bty->clear();
+    }
 
     ui->label_tx->clear();
     ui->label_ty->clear();

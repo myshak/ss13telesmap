@@ -20,10 +20,20 @@
    <string>Calibration</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -317,17 +327,200 @@ position</string>
       <attribute name="title">
        <string>Extrapolation</string>
       </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="4" colspan="2">
+        <widget class="QLabel" name="label_12">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Maximum</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QDoubleSpinBox" name="edit_minx">
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>500.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="4" colspan="2">
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string/>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="max_y_1">
+            <property name="text">
+             <string>199</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">y_max_group</string>
+            </attribute>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="max_y_2">
+            <property name="text">
+             <string>99.5</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">y_max_group</string>
+            </attribute>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QRadioButton" name="max_y_4">
+            <property name="text">
+             <string>49.75</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">y_max_group</string>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="label_9">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>X</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QLabel" name="label_10">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Minimum</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QDoubleSpinBox" name="edit_miny">
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>500.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4" colspan="2">
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string/>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="max_x_2">
+            <property name="text">
+             <string>99.5</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">x_max_group</string>
+            </attribute>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QRadioButton" name="max_x_4">
+            <property name="text">
+             <string>49.75</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">x_max_group</string>
+            </attribute>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="max_x_1">
+            <property name="text">
+             <string>199</string>
+            </property>
+            <attribute name="buttonGroup">
+             <string notr="true">x_max_group</string>
+            </attribute>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="label_11">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Y</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="2" column="0">
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </widget>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
     </widget>
    </item>
   </layout>
@@ -342,6 +535,15 @@ position</string>
   <tabstop>iy2</tabstop>
   <tabstop>ox2</tabstop>
   <tabstop>oy2</tabstop>
+  <tabstop>edit_minx</tabstop>
+  <tabstop>edit_miny</tabstop>
+  <tabstop>max_x_1</tabstop>
+  <tabstop>max_x_2</tabstop>
+  <tabstop>max_x_4</tabstop>
+  <tabstop>max_y_1</tabstop>
+  <tabstop>max_y_2</tabstop>
+  <tabstop>max_y_4</tabstop>
+  <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources/>
  <connections>
@@ -377,5 +579,44 @@ position</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>edit_minx</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>CalibrationDialog</receiver>
+   <slot>update_max_values()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>55</x>
+     <y>88</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>3</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>edit_miny</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>CalibrationDialog</receiver>
+   <slot>update_max_values()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>73</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>308</x>
+     <y>5</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>update_max_values()</slot>
+ </slots>
+ <buttongroups>
+  <buttongroup name="x_max_group"/>
+  <buttongroup name="y_max_group"/>
+ </buttongroups>
 </ui>
