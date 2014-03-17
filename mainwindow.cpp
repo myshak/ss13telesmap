@@ -4,13 +4,6 @@
 
 #include <QSettings>
 
-/*const int mapTileOffsetX = 26;
-const int mapTileOffsetY = 31;
-
-const int mapPixelOffsetLeftX = 32 - 1;  // From left edge
-const int mapPixelOffsetTopY = 9; // From top edge
-const int mapPixelOffsetBottomY = 32 - 17; // From bottom edge*/
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -35,11 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
         Map m;
         m.path = settings.value("path").toString();
         m.name = map;
-        m.mapTileOffsetX = settings.value("mapTileOffsetX").toInt();
-        m.mapTileOffsetY = settings.value("mapTileOffsetY").toInt();
-        m.mapPixelOffsetLeftX = settings.value("mapPixelOffsetLeftX").toInt();
-        m.mapPixelOffsetTopY = settings.value("mapPixelOffsetTopY").toInt();
-        m.mapPixelOffsetBottomY = settings.value("mapPixelOffsetBottomY").toInt();
         maps.append(m);
         settings.endGroup();
 
@@ -113,11 +101,10 @@ void MainWindow::pressed(QMouseEvent *e)
         ui->graphicsView->resetZoom();
     } else if(e->button() == Qt::RightButton) {
 
-        if(e->button() != Qt::RightButton) return;
 
         selected = true;
-        sx = 1+ e->x()/32 + currentMap->mapTileOffsetX;
-        sy = 1+ e->y()/32 + currentMap->mapTileOffsetY;
+        sx = 1+ e->x()/32;
+        sy = 1+ e->y()/32;
 
         ui->label_ox->setText(QString("%1").arg(sx));
         ui->label_oy->setText(QString("%1").arg(sy));
@@ -140,12 +127,11 @@ void MainWindow::pressed(QMouseEvent *e)
 
 void MainWindow::moved(QMouseEvent *e)
 {
-//    int x = e->x()/32 + currentMap->mapTileOffsetX;
-//    int y = e->y()/32 + currentMap->mapTileOffsetY;
-    int ex = e->x() + currentMap->mapPixelOffsetLeftX;
-    int ey = e->y() ;//+ currentMap->mapPixelOffsetTopY;
-    int x = 1+ex/32 + currentMap->mapTileOffsetX;
-    int y = 1+ey/32 + currentMap->mapTileOffsetY;
+
+    int ex = e->x();
+    int ey = e->y();
+    int x = 1+ex/32;
+    int y = 1+ey/32;
 
     ui->statusBar->showMessage(QString("X: %1 / Y: %2").arg(x).arg(y));
 
@@ -201,20 +187,16 @@ void MapScene::highligt(QPoint pos)
 
 void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pf(event->scenePos().x() - currentMap->mapPixelOffsetLeftX, height() - event->scenePos().y() - currentMap->mapPixelOffsetBottomY);
+    QPointF pf(event->scenePos().x(), height() - event->scenePos().y());
     QMouseEvent ne(event->type(), pf.toPoint(), event->button(), event->buttons(), event->modifiers());
     emit mousepressed(&ne);
 
     if(event->button() == Qt::RightButton) {
-//        int x = (event->scenePos().x())/32;
-//        int y = (event->scenePos().y() + 16 + currentMap->mapPixelOffsetTopY)/32;
-//        int y = (event->scenePos().y() + 32 + currentMap->mapPixelOffsetTopY)/32;
+        int x = event->scenePos().x()/32;
+        int y = (event->scenePos().y() + 0)/32; // TODO: ?
 
-        int x = (event->scenePos().x() - currentMap->mapPixelOffsetLeftX)/32;
-        int y = (event->scenePos().y() + 32 - currentMap->mapPixelOffsetTopY)/32;
-
-        selectedSquare->setX(x*32 + currentMap->mapPixelOffsetLeftX);
-        selectedSquare->setY(y*32 - (32 - currentMap->mapPixelOffsetTopY) - 1);
+        selectedSquare->setX(x*32);
+        selectedSquare->setY(y*32 - 1); // TODO: ?
         selectedSquare->show();
     }
 
@@ -223,14 +205,14 @@ void MapScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void MapScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPointF pf(event->scenePos().x() - currentMap->mapPixelOffsetLeftX, height() - event->scenePos().y() - currentMap->mapPixelOffsetBottomY);
+    QPointF pf(event->scenePos().x(), height() - event->scenePos().y());
     QMouseEvent ne(event->type(), pf.toPoint(), event->button(), event->buttons(), event->modifiers());
     emit mousemoved(&ne);
 
-    int x = (event->scenePos().x() - currentMap->mapPixelOffsetLeftX)/32;
-    int y = (event->scenePos().y() + 32 - currentMap->mapPixelOffsetTopY)/32;
-    int x_pos = x*32 + currentMap->mapPixelOffsetLeftX;
-    int y_pos = y*32 - (32 - currentMap->mapPixelOffsetTopY) - 1;
+    int x = event->scenePos().x()/32;
+    int y = (event->scenePos().y() + 0)/32; // TODO: ?
+    int x_pos = x*32;
+    int y_pos = y*32 - 1; // TODO: ?
 
     highligt(QPoint{x_pos, y_pos});
 
@@ -314,12 +296,13 @@ void MainWindow::update_params()
     cx = ui->edit_cx->value();
     cy = ui->edit_cy->value();
 
-    bool m_ok = false;
-    mx = ui->edit_mx->currentText().toInt(&m_ok);
-    my = ui->edit_my->currentText().toInt(&m_ok);
+    bool mx_ok = false;
+    bool my_ok = false;
+    mx = ui->edit_mx->currentText().toInt(&mx_ok);
+    my = ui->edit_my->currentText().toInt(&my_ok);
 
     // Recalculate only with valid constants
-    if(m_ok) {
+    if(mx_ok && my_ok) {
         recalculate_manual();
         on_tableWidget_itemSelectionChanged();
     } else {
@@ -334,13 +317,8 @@ void MainWindow::update_params()
 }
 
 
-Map::Map(QString path, QPoint offsetTopLeft, QPoint offsetBottomRight, QPoint tileOffset)
-    : path(path),
-      mapTileOffsetX(tileOffset.x()),
-      mapTileOffsetY(tileOffset.y()),
-      mapPixelOffsetLeftX(offsetTopLeft.x()),
-      mapPixelOffsetTopY(offsetTopLeft.y()),
-      mapPixelOffsetBottomY(offsetBottomRight.y())
+Map::Map(QString path)
+    : path(path)
 {
 }
 

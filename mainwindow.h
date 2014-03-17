@@ -11,17 +11,10 @@ class MainWindow;
 class Map {
 public:
     Map() = default;
-    Map(QString path, QPoint offsetTopLeft, QPoint offsetBottomRight, QPoint tileOffset);
+    Map(QString path);
 
     QString path;
     QString name;
-
-    int mapTileOffsetX;
-    int mapTileOffsetY;
-
-    int mapPixelOffsetLeftX;  // From left edge
-    int mapPixelOffsetTopY; // From top edge
-    int mapPixelOffsetBottomY; // From bottom edge
 };
 
 class MapScene : public QGraphicsScene
