@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
         currentMap = &(maps[0]);
         scene->setMap(&(maps[0]));
         ui->menuMaps->actions()[0]->setChecked(true);
-        setWindowTitle(QString("%1 - %2").arg(QCoreApplication::applicationName()).arg(maps[0].name));
+        setWindowTitle(QString("%2 - %1").arg(QCoreApplication::applicationName()).arg(maps[0].name));
     }
 
     ui->graphicsView->setScene(scene);
