@@ -251,7 +251,7 @@ void MainWindow::calibrated(qreal mx, qreal my, qreal cx, qreal cy)
 
     if(my == 1 || my == 2) {
         ui->edit_my->setCurrentIndex(my);
-    } else if (mx == 4) {
+    } else if (my == 4) {
         ui->edit_my->setCurrentIndex(3);
     }
 

@@ -69,7 +69,7 @@ void CalibrationDialog::calibrate_extrapolation()
     qreal maxy = b_maxy->text().toDouble();
 
     int mx = ui->x_max_group->checkedId();
-    int my = ui->x_max_group->checkedId();
+    int my = ui->y_max_group->checkedId();
 
     int cx = maxx*mx - 200;
     int cy = maxy*my - 200;
