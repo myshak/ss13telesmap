@@ -397,3 +397,11 @@ void MainWindow::on_pushButton_4_clicked()
 
 
 
+
+void MainWindow::on_actionAbout_SS13_Telescience_Manager_triggered()
+{
+    QMessageBox::about(this, tr("About Telescience Manager"), trUtf8("Telescience Manager\n© 2013-2014 by mysha (mysha@mysha.cu.cc)\n"
+                                                            "\n"
+                                                            "Donations in bitcoins or goon membership are appreciated.\n\n"
+                                                            "BTC donation address: %0").arg("1Gzk3F4C4FiMVjTHCCkRuRwqZoCKujtBXd"));
+}

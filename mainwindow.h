@@ -72,6 +72,8 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_actionAbout_SS13_Telescience_Manager_triggered();
+
 private:
     Ui::MainWindow *ui;
     MapScene *scene;
