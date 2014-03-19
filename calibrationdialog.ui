@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>347</width>
-    <height>311</height>
+    <height>338</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -350,7 +350,7 @@ position</string>
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
          </property>
          <property name="minimum">
-          <double>1.000000000000000</double>
+          <double>0.000000000000000</double>
          </property>
          <property name="maximum">
           <double>500.000000000000000</double>
@@ -431,7 +431,7 @@ position</string>
        <item row="2" column="3">
         <widget class="QDoubleSpinBox" name="edit_miny">
          <property name="minimum">
-          <double>1.000000000000000</double>
+          <double>0.000000000000000</double>
          </property>
          <property name="maximum">
           <double>500.000000000000000</double>
@@ -616,7 +616,7 @@ position</string>
   <slot>update_max_values()</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="x_max_group"/>
   <buttongroup name="y_max_group"/>
+  <buttongroup name="x_max_group"/>
  </buttongroups>
 </ui>
