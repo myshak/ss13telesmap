@@ -193,15 +193,15 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>98</width>
-                <height>324</height>
+                <width>1030</width>
+                <height>190</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_3">
                <item>
                 <widget class="QLabel" name="label_9">
                  <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Left mouse button&lt;/span&gt; - pan around map&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Right mouse button&lt;/span&gt; - select tile&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Middle mouse button&lt;/span&gt; - reset zoom&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Mouse wheel&lt;/span&gt; - zoom in/out&lt;/p&gt;&lt;p&gt;You must first calibrate (Options-&amp;gt;Calibrate) before you can select a tile and have its coordinates transformed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Left mouse button&lt;/span&gt; - pan around map&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Right mouse button&lt;/span&gt; - select tile&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Middle mouse button&lt;/span&gt; - reset zoom&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Mouse wheel&lt;/span&gt; - zoom in/out&lt;/p&gt;&lt;p&gt;You must first calibrate (Options-&amp;gt;Calibrate) before you can select a tile and have its coordinates translated.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -344,7 +344,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="label_7">
          <property name="text">
-          <string>Transformed</string>
+          <string>Translated</string>
          </property>
         </widget>
        </item>
@@ -554,7 +554,7 @@
        <item row="5" column="0">
         <widget class="QLabel" name="label_15">
          <property name="text">
-          <string>Trranslated</string>
+          <string>Translated</string>
          </property>
         </widget>
        </item>
