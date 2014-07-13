@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>347</width>
-    <height>338</height>
+    <width>385</width>
+    <height>350</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    <string>Calibration</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -328,7 +328,7 @@ position</string>
        <string>Extrapolation</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="4" colspan="2">
+       <item row="0" column="5" colspan="2">
         <widget class="QLabel" name="label_12">
          <property name="font">
           <font>
@@ -357,7 +357,7 @@ position</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="4" colspan="2">
+       <item row="2" column="5" colspan="2">
         <widget class="QGroupBox" name="groupBox_4">
          <property name="title">
           <string/>
@@ -438,7 +438,7 @@ position</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="4" colspan="2">
+       <item row="1" column="5" colspan="2">
         <widget class="QGroupBox" name="groupBox_3">
          <property name="title">
           <string/>
@@ -493,20 +493,66 @@ position</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="4">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+       <item row="4" column="3">
+        <widget class="QLabel" name="label_13">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
+         <property name="text">
+          <string>Map size (tiles)</string>
          </property>
-        </spacer>
+        </widget>
        </item>
-       <item row="2" column="0">
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_14">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>X</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLabel" name="label_15">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Y</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="3">
+        <widget class="QSpinBox" name="map_size_x">
+         <property name="maximum">
+          <number>1000</number>
+         </property>
+         <property name="value">
+          <number>300</number>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="3">
+        <widget class="QSpinBox" name="map_size_y">
+         <property name="maximum">
+          <number>1000</number>
+         </property>
+         <property name="value">
+          <number>300</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
         <spacer name="horizontalSpacer_3">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -522,6 +568,19 @@ position</string>
       </layout>
      </widget>
     </widget>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>
@@ -554,8 +613,8 @@ position</string>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>256</x>
-     <y>302</y>
+     <x>264</x>
+     <y>576</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -570,8 +629,8 @@ position</string>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>324</x>
-     <y>302</y>
+     <x>332</x>
+     <y>576</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
@@ -586,8 +645,8 @@ position</string>
    <slot>update_max_values()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>55</x>
-     <y>88</y>
+     <x>482</x>
+     <y>122</y>
     </hint>
     <hint type="destinationlabel">
      <x>174</x>
@@ -602,12 +661,44 @@ position</string>
    <slot>update_max_values()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>149</y>
+     <x>482</x>
+     <y>182</y>
     </hint>
     <hint type="destinationlabel">
      <x>308</x>
      <y>5</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>map_size_x</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>CalibrationDialog</receiver>
+   <slot>update_max_values()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>482</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>38</x>
+     <y>2</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>map_size_y</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>CalibrationDialog</receiver>
+   <slot>update_max_values()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>482</x>
+     <y>285</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>99</x>
+     <y>349</y>
     </hint>
    </hints>
   </connection>

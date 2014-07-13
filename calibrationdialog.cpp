@@ -61,7 +61,7 @@ void CalibrationDialog::calibrate_extrapolation()
     QAbstractButton* b_maxy = ui->y_max_group->checkedButton();
 
     if(!b_maxx || !b_maxy) {
-        // Check a box message?
+        // 'Check a box' message?
         return;
     }
 
@@ -71,8 +71,8 @@ void CalibrationDialog::calibrate_extrapolation()
     int mx = ui->x_max_group->checkedId();
     int my = ui->y_max_group->checkedId();
 
-    int cx = maxx*mx - 200;
-    int cy = maxy*my - 200;
+    int cx = maxx*mx - ui->map_size_x->value();
+    int cy = maxy*my - ui->map_size_y->value();
 
     emit calibrated(mx,my,cx,cy);
 }
@@ -82,13 +82,16 @@ void CalibrationDialog::update_max_values()
     qreal minx = ui->edit_minx->value();
     qreal miny = ui->edit_miny->value();
 
-    ui->max_x_1->setText(QString::number(199.0 + minx));
-    ui->max_x_2->setText(QString::number(199.0/2 + minx));
-    ui->max_x_4->setText(QString::number(199.0/4 + minx));
+    float map_x = static_cast<float>(ui->map_size_x->value() - 1);
+    float map_y = static_cast<float>(ui->map_size_y->value() - 1);
 
-    ui->max_y_1->setText(QString::number(199.0 + miny));
-    ui->max_y_2->setText(QString::number(199.0/2 + miny));
-    ui->max_y_4->setText(QString::number(199.0/4 + miny));
+    ui->max_x_1->setText(QString::number(map_x + minx));
+    ui->max_x_2->setText(QString::number(map_x/2.0 + minx));
+    ui->max_x_4->setText(QString::number(map_x/4.0 + minx));
+
+    ui->max_y_1->setText(QString::number(map_y + miny));
+    ui->max_y_2->setText(QString::number(map_y/2.0 + miny));
+    ui->max_y_4->setText(QString::number(map_y/4.0 + miny));
 }
 
 void CalibrationDialog::accept()
