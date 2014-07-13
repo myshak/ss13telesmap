@@ -33,7 +33,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="documentMode">
       <bool>true</bool>
@@ -369,7 +369,7 @@ position</string>
           <item row="0" column="0">
            <widget class="QRadioButton" name="max_y_1">
             <property name="text">
-             <string>199</string>
+             <string>299</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">y_max_group</string>
@@ -379,7 +379,7 @@ position</string>
           <item row="0" column="1">
            <widget class="QRadioButton" name="max_y_2">
             <property name="text">
-             <string>99.5</string>
+             <string>149.5</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">y_max_group</string>
@@ -389,7 +389,7 @@ position</string>
           <item row="0" column="2">
            <widget class="QRadioButton" name="max_y_4">
             <property name="text">
-             <string>49.75</string>
+             <string>74.75</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">y_max_group</string>
@@ -450,7 +450,7 @@ position</string>
           <item row="0" column="1">
            <widget class="QRadioButton" name="max_x_2">
             <property name="text">
-             <string>99.5</string>
+             <string>149.5</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">x_max_group</string>
@@ -460,7 +460,7 @@ position</string>
           <item row="0" column="2">
            <widget class="QRadioButton" name="max_x_4">
             <property name="text">
-             <string>49.75</string>
+             <string>74.75</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">x_max_group</string>
@@ -470,7 +470,7 @@ position</string>
           <item row="0" column="0">
            <widget class="QRadioButton" name="max_x_1">
             <property name="text">
-             <string>199</string>
+             <string>299</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">x_max_group</string>
@@ -707,7 +707,7 @@ position</string>
   <slot>update_max_values()</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="y_max_group"/>
   <buttongroup name="x_max_group"/>
+  <buttongroup name="y_max_group"/>
  </buttongroups>
 </ui>
