@@ -193,8 +193,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>1030</width>
-                <height>190</height>
+                <width>98</width>
+                <height>428</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -499,7 +499,7 @@
           <number>1</number>
          </property>
          <property name="maximum">
-          <number>200</number>
+          <number>1000</number>
          </property>
         </widget>
        </item>
@@ -518,7 +518,7 @@
           <number>1</number>
          </property>
          <property name="maximum">
-          <number>200</number>
+          <number>1000</number>
          </property>
         </widget>
        </item>
@@ -699,7 +699,7 @@
           <cursorShape>ArrowCursor</cursorShape>
          </property>
          <property name="maximum">
-          <number>200</number>
+          <number>1000</number>
          </property>
         </widget>
        </item>
@@ -829,7 +829,7 @@
           </sizepolicy>
          </property>
          <property name="maximum">
-          <number>200</number>
+          <number>1000</number>
          </property>
         </widget>
        </item>
@@ -844,7 +844,7 @@
      <x>0</x>
      <y>0</y>
      <width>1048</width>
-     <height>18</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSS13_Telescience_Coordinator">
