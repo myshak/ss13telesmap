@@ -3,10 +3,17 @@
 
 #include <QMainWindow>
 #include <QtGui>
+#include <QVector>
 
 namespace Ui {
 class MainWindow;
 }
+
+struct Overlay {
+    QString file_path;
+    QString name;
+    QGraphicsItem* graphics;
+};
 
 class Map {
 public:
@@ -15,6 +22,7 @@ public:
 
     QString path;
     QString name;
+    QVector<Overlay> overlays;
 };
 
 class MapScene : public QGraphicsScene
@@ -26,6 +34,8 @@ public:
     void setMap(Map *m);
     Map *getMap() const;
     void highligt(QPoint pos);
+    QGraphicsItem *addOverlay(QString path);
+    void deleteOverlay(QGraphicsItem *item);
 
 signals:
      void mousepressed(QMouseEvent*);
@@ -40,6 +50,8 @@ private:
     QGraphicsRectItem *highlightedSquare;
     Map *currentMap;
     QGraphicsPixmapItem *map;
+
+    void addSelectors();
 };
 
 class MainWindow : public QMainWindow
@@ -55,6 +67,7 @@ public slots:
     void moved(QMouseEvent * e);
     void calibrated(qreal mx, qreal my, qreal cx, qreal cy);
     void map_selected(QAction *a);
+    void overlay_selected(QAction *a);
     void recalculate_manual();
     void update_params();
     
@@ -89,4 +102,6 @@ private:
 
     QVector<Map> maps;
 };
+Q_DECLARE_METATYPE(Overlay*)
+
 #endif // MAINWINDOW_H

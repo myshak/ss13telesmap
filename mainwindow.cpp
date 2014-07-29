@@ -23,11 +23,23 @@ MainWindow::MainWindow(QWidget *parent) :
     QActionGroup *action_group = new QActionGroup(this);
 
     QStringList map_entries = settings.childGroups();
-    for(auto &map: map_entries) {
+    for(auto const& map: map_entries) {
         settings.beginGroup(map);
         Map m;
         m.path = settings.value("path").toString();
         m.name = map;
+
+        int map_overlays = settings.beginReadArray("overlays");
+        for(int i = 0; i< map_overlays; ++i) {
+            Overlay o;
+            settings.setArrayIndex(i);
+            o.file_path = settings.value("path").toString();
+            o.name = settings.value("name").toString();
+            o.graphics = nullptr;
+            m.overlays.append(o);
+        }
+        settings.endArray();
+
         maps.append(m);
         settings.endGroup();
 
@@ -39,10 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     if(maps.size() > 0) {
-        currentMap = &(maps[0]);
-        scene->setMap(&(maps[0]));
-        ui->menuMaps->actions()[0]->setChecked(true);
-        setWindowTitle(QString("%2 - %1").arg(QCoreApplication::applicationName()).arg(maps[0].name));
+        map_selected(ui->menuMaps->actions()[0]);
     }
 
     ui->graphicsView->setScene(scene);
@@ -85,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QObject::connect(bg, SIGNAL(buttonClicked(int)), this, SLOT(toolbutton_pressed(int)));
 
     QObject::connect(ui->menuMaps, SIGNAL(triggered(QAction*)), this, SLOT(map_selected(QAction*)));
+    QObject::connect(ui->menuOverlays, SIGNAL(triggered(QAction*)), this, SLOT(overlay_selected(QAction*)));
     QObject::connect(scene, SIGNAL(mousepressed(QMouseEvent*)), this, SLOT(pressed(QMouseEvent*)));
     QObject::connect(scene, SIGNAL(mousemoved(QMouseEvent*)), this, SLOT(moved(QMouseEvent*)));
 
@@ -142,6 +152,9 @@ MapScene::MapScene(QObject *parent)
       currentMap(nullptr),
       map(nullptr)
 {
+}
+
+void MapScene::addSelectors() {
     QBrush b(QColor(255,0,0,64));
     QPen p;
     p.setColor(QColor(255,0,0,255));
@@ -161,10 +174,8 @@ MapScene::MapScene(QObject *parent)
 void MapScene::setMap(Map *m)
 {
     currentMap = m;
-    if(map) {
-        this->removeItem(map);
-        delete map;
-    }
+    this->clear();
+    addSelectors();
 
     QPixmap map_pix(currentMap->path);
     map = this->addPixmap(map_pix);
@@ -172,6 +183,19 @@ void MapScene::setMap(Map *m)
     setSceneRect(0,0,map_pix.width(), map_pix.height());
     selectedSquare->hide();
     highlightedSquare->hide();
+}
+
+QGraphicsItem* MapScene::addOverlay(QString path)
+{
+    QPixmap overlay_pixmap(path);
+    QGraphicsItem* overlay = this->addPixmap(overlay_pixmap);
+    overlay->setZValue(1);
+    return overlay;
+}
+
+void MapScene::deleteOverlay(QGraphicsItem* overlay)
+{
+    this->removeItem(overlay);
 }
 
 Map *MapScene::getMap() const
@@ -270,8 +294,32 @@ void MainWindow::map_selected(QAction *a)
     currentMap = &maps[a->data().toInt()];
     scene->setMap(&maps[a->data().toInt()]);
 
+    ui->menuOverlays->clear();
+    if(!currentMap->overlays.isEmpty()) {
+        ui->menuOverlays->setEnabled(true);
+        for(auto& overlay: currentMap->overlays) {
+            QAction* overlay_action = ui->menuOverlays->addAction(overlay.name);
+            overlay_action->setCheckable(true);
+            overlay_action->setData(QVariant::fromValue(&overlay));
+        }
+    }else{
+        ui->menuOverlays->setEnabled(false);
+    }
+
     a->setChecked(true);
     setWindowTitle(QString("%1 - %2").arg(QCoreApplication::applicationName()).arg(maps[a->data().toInt()].name));
+}
+
+void MainWindow::overlay_selected(QAction *a)
+{
+    Overlay *overlay = a->data().value<Overlay*>();
+    if(a->isChecked() && !overlay->graphics) {
+        overlay->graphics = scene->addOverlay(overlay->file_path);
+    } else {
+        scene->deleteOverlay(overlay->graphics);
+        delete overlay->graphics;
+        overlay->graphics = nullptr;
+    }
 }
 
 void MainWindow::recalculate_manual()
