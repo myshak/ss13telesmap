@@ -388,10 +388,10 @@ void MainWindow::on_pushButton_3_clicked()
     bookmark_settings.beginWriteArray("bookmark");
     for(int i=0; i < ui->tableWidget->rowCount(); i++) {
         bookmark_settings.setArrayIndex(i);
-        bookmark_settings.setValue("name", ui->tableWidget->item(i, 0)->text());
-        bookmark_settings.setValue("map", ui->tableWidget->item(i, 1)->text());
-        bookmark_settings.setValue("x", ui->tableWidget->item(i, 2)->text());
-        bookmark_settings.setValue("y", ui->tableWidget->item(i, 3)->text());
+        bookmark_settings.setValue("name", ui->tableWidget->item(i, 0) ? ui->tableWidget->item(i, 0)->text() : "");
+        bookmark_settings.setValue("map" , ui->tableWidget->item(i, 1) ? ui->tableWidget->item(i, 1)->text() : "");
+        bookmark_settings.setValue("x"   , ui->tableWidget->item(i, 2) ? ui->tableWidget->item(i, 2)->text() : "");
+        bookmark_settings.setValue("y"   , ui->tableWidget->item(i, 3) ? ui->tableWidget->item(i, 3)->text() : "");
     }
     bookmark_settings.endArray();
 
