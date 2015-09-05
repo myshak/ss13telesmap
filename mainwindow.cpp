@@ -175,6 +175,8 @@ void MapScene::setMap(Map *m)
 {
     currentMap = m;
     this->clear();
+    // Clear the internal QPixmap cache, so the previous map images are not constantly stored in memory
+    QPixmapCache::clear();
     addSelectors();
 
     QPixmap map_pix(currentMap->path);
